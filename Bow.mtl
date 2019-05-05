@@ -1,0 +1,11 @@
+#Produced by Art of Illusion 3.0.3, Sat May 04 19:59:19 CDT 2019
+newmtl Rubber
+Kd 0.91 0.819 0
+Ks 0 0 0
+Ka 0 0 0
+illum 1
+newmtl Wood
+Kd 0.8 0.57536 0.368
+Ks 0 0 0
+Ka 0 0 0
+illum 1
