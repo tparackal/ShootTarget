@@ -34,6 +34,9 @@ public class ShootTarget extends Application
 	private double mouseDeltaX;
 	private double mouseDeltaY;
 	
+	int bowX = 0;
+	int bowY = 0;
+	
 	private void constructWorld(Group root) 
 	{
 		// AmbientLight light = new AmbientLight();
@@ -56,38 +59,39 @@ public class ShootTarget extends Application
 			e.printStackTrace();
 		}
 		Group bow = drvr.getRoot();
-		bow.setScaleX(70);
-		bow.setScaleY(-70);
-		bow.setScaleZ(-70);
-		bow.setTranslateX(110);
-		bow.setTranslateY(-150);
-		
-//		Rotate rotateBow = new Rotate(90, Rotate.Y_AXIS);
-//		bow.getTransforms().addAll(rotateBow);
+		bow.setScaleX(50);
+		bow.setScaleY(-50);
+		bow.setScaleZ(-50);
+//		bow.setTranslateX(110);
+//		bow.setTranslateY(-150);
+		bow.setTranslateX(bowX);
+		bow.setTranslateY(bowY);
+		Rotate rotateBow = new Rotate(90, Rotate.Y_AXIS);
+		bow.getTransforms().addAll(rotateBow);
 		
 //		root.getChildren().add(bow);
-		for (Node n:bow.getChildren())
-		{
-			MeshView mv = (MeshView) n;
-			Mesh m = ((MeshView) n).getMesh();
-			//mv.setDrawMode(DrawMode.LINE);
-			System.out.println(n);
-			System.out.println(m);
-			TriangleMesh tm = (TriangleMesh) m;
-			System.out.println("Faces: "+tm.getFaceElementSize());
-			System.out.println(tm.getFaces() );
-			System.out.println(tm.getFaceSmoothingGroups());
-			System.out.println("Normals: "+tm.getNormalElementSize());
-			System.out.println(tm.getNormals());
-			System.out.println("Points: "+tm.getPointElementSize());
-			System.out.println(tm.getPoints());
-			System.out.println("TexCoords: "+tm.getTexCoordElementSize());
-			System.out.println(tm.getTexCoords());
-		}
+//		for (Node n:bow.getChildren())
+//		{
+//			MeshView mv = (MeshView) n;
+//			Mesh m = ((MeshView) n).getMesh();
+//			//mv.setDrawMode(DrawMode.LINE);
+//			System.out.println(n);
+//			System.out.println(m);
+//			TriangleMesh tm = (TriangleMesh) m;
+//			System.out.println("Faces: "+tm.getFaceElementSize());
+//			System.out.println(tm.getFaces() );
+//			System.out.println(tm.getFaceSmoothingGroups());
+//			System.out.println("Normals: "+tm.getNormalElementSize());
+//			System.out.println(tm.getNormals());
+//			System.out.println("Points: "+tm.getPointElementSize());
+//			System.out.println(tm.getPoints());
+//			System.out.println("TexCoords: "+tm.getTexCoordElementSize());
+//			System.out.println(tm.getTexCoords());
+//		}
 		ObjView drvr2 = new ObjView();
 		try
 		{
-			drvr.load(ClassLoader.getSystemResource("Arrow.obj").toString());
+			drvr2.load(ClassLoader.getSystemResource("Arrow.obj").toString());
 		} 
 		catch (IOException e) 
 		{
@@ -95,17 +99,24 @@ public class ShootTarget extends Application
 			e.printStackTrace();
 		}
 		Group arrow = drvr2.getRoot();
-		arrow.setScaleX(70);
-		arrow.setScaleY(-70);
-		arrow.setScaleZ(70);
-		arrow.setTranslateX(-120);
-		arrow.setTranslateY(-150);
+		arrow.setScaleX(30);
+		arrow.setScaleY(-30);
+		arrow.setScaleZ(30);
+//		arrow.setTranslateX(-120);
+//		arrow.setTranslateY(-150);
+		arrow.setTranslateX(bowX + 150);
+		arrow.setTranslateY(bowY + -25);
 		
 		
 		Rotate rotateArrow = new Rotate(90, Rotate.X_AXIS);
 		arrow.getTransforms().addAll(rotateArrow);
 //		root.getChildren().add(arrow);
 		root.getChildren().addAll(bow, arrow);
+	}
+	
+	public void update(Group root)
+	{
+		
 	}
 
 	@Override
@@ -181,17 +192,21 @@ public class ShootTarget extends Application
 			mousePosY = me.getSceneY();
 		});
 
-		scene.setOnMouseDragged(me -> 
+		scene.setOnMouseMoved(me -> 
 		{
-			mouseOldX = mousePosX;
-			mouseOldY = mousePosY;
-			mousePosX = me.getSceneX();
-			mousePosY = me.getSceneY();
-			mouseDeltaX = (mousePosX - mouseOldX);
-			mouseDeltaY = (mousePosY - mouseOldY);
+			bowX = (int)me.getX();
+			bowY = (int)me.getY();
+			constructWorld(sceneRoot);
+//			update(sceneRoot);
+//			mouseOldX = mousePosX;
+//			mouseOldY = mousePosY;
+//			mousePosX = me.getSceneX();
+//			mousePosY = me.getSceneY();
+//			mouseDeltaX = (mousePosX - mouseOldX);
+//			mouseDeltaY = (mousePosY - mouseOldY);
 
-			yRotate.setAngle(((yRotate.getAngle() - mouseDeltaX * 0.2) % 360 + 540) % 360 - 180); // +
-			xRotate.setAngle(((xRotate.getAngle() + mouseDeltaY * 0.2) % 360 + 540) % 360 - 180); // -
+//			yRotate.setAngle(((yRotate.getAngle() - mouseDeltaX * 0.2) % 360 + 540) % 360 - 180); // +
+//			xRotate.setAngle(((xRotate.getAngle() + mouseDeltaY * 0.2) % 360 + 540) % 360 - 180); // -
 		});
 
 		primaryStage.setTitle("Shoot Target");
