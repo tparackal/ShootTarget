@@ -44,8 +44,11 @@ public class ShootTarget extends Application
 	public int numArrows = 4; // amount of arrows left
 	Bow bow;
 	Arrow arrow;
+<<<<<<< HEAD
 	Target target1;
 	Target target2;
+=======
+>>>>>>> c5027763b27ef505f327c61d03b93454131059a2
 	Group root;
 //	Group arrow;
 //	public static int bowX = 0;
@@ -101,11 +104,18 @@ public class ShootTarget extends Application
 //			System.out.println("TexCoords: "+tm.getTexCoordElementSize());
 //			System.out.println(tm.getTexCoords());
 //		}
+<<<<<<< HEAD
 		
 		bow = new Bow();
 		arrow = new Arrow();
 		target1 = new Target(50, 5, Color.BLUE, 1, 300);
 		target2 = new Target(50, 5, Color.GREEN, 3, 350);
+=======
+		
+		bow = new Bow();
+		arrow = new Arrow();
+		
+>>>>>>> c5027763b27ef505f327c61d03b93454131059a2
 //		ObjView drvr2 = new ObjView();
 //		try
 //		{
@@ -154,8 +164,11 @@ public class ShootTarget extends Application
 		{
 			bow.update();
 			arrow.update();
+<<<<<<< HEAD
 			target1.update();
 			target2.update();
+=======
+>>>>>>> c5027763b27ef505f327c61d03b93454131059a2
 		}
 
 	@Override
@@ -251,7 +264,11 @@ public class ShootTarget extends Application
 				KeyFrame kf = new KeyFrame(Duration.millis(1000 / FPS),
 						e -> {
 							// update position
+<<<<<<< HEAD
 							update();
+=======
+							update(sceneRoot);
+>>>>>>> c5027763b27ef505f327c61d03b93454131059a2
 						}
 					);
 				Timeline mainLoop = new Timeline(kf);
