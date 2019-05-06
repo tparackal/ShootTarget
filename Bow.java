@@ -30,6 +30,7 @@ public class Bow extends Group
 		bow.setTranslateZ(0);
 //		Rotate rotateBow = new Rotate(90, Rotate.Y_AXIS);
 		bow.getTransforms().addAll(rotateBow);
+		this.getChildren().addAll(bow);
 	}
 	
 	public void update() // bow stays fixed in one location

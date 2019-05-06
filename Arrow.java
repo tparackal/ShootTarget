@@ -7,7 +7,7 @@ public class Arrow extends Group
 
 	public static double vZ = 0;
 	
-	Rotate rotateArrow = new Rotate(90, Rotate.X_AXIS);
+	Rotate rotateArrow = new Rotate(-90, Rotate.X_AXIS);
 	
 	public Arrow()
 	{
@@ -22,21 +22,22 @@ public class Arrow extends Group
 			System.out.println("Trouble loading model");
 			e.printStackTrace();
 		}
-//		Group arrow = drvr2.getRoot();
-		setScaleX(30);
-		setScaleY(-30);
-		setScaleZ(30);
+		Group arrow = drvr2.getRoot();
+		arrow.setScaleX(30);
+		arrow.setScaleY(-30);
+		arrow.setScaleZ(30);
 //		arrow.setTranslateX(-120);
 //		arrow.setTranslateY(-150);
-		setTranslateX(150);
-		setTranslateY(-25);
-		setTranslateZ(0); 
+		arrow.setTranslateX(150);
+		arrow.setTranslateY(-25);
+		arrow.setTranslateZ(0); 
 		
 //		Rotate rotateArrow = new Rotate(90, Rotate.X_AXIS);
 		getTransforms().addAll(rotateArrow);
+		this.getChildren().addAll(arrow);
 	}
 	
-	public void update()
+	public void update() // arrow only moves in the Z direction
 	{
 //		setTranslateX(getTranslateX() + vX);
 //	    setTranslateY(getTranslateY() + vY);

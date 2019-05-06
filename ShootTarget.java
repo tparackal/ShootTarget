@@ -44,11 +44,12 @@ public class ShootTarget extends Application
 	public int numArrows = 4; // amount of arrows left
 	Bow bow;
 	Arrow arrow;
-<<<<<<< HEAD
+
 	Target target1;
 	Target target2;
-=======
->>>>>>> c5027763b27ef505f327c61d03b93454131059a2
+	
+	final double BOUND = 800;
+
 	Group root;
 //	Group arrow;
 //	public static int bowX = 0;
@@ -104,18 +105,17 @@ public class ShootTarget extends Application
 //			System.out.println("TexCoords: "+tm.getTexCoordElementSize());
 //			System.out.println(tm.getTexCoords());
 //		}
-<<<<<<< HEAD
+
 		
 		bow = new Bow();
 		arrow = new Arrow();
 		target1 = new Target(50, 5, Color.BLUE, 1, 300);
 		target2 = new Target(50, 5, Color.GREEN, 3, 350);
-=======
+
 		
-		bow = new Bow();
-		arrow = new Arrow();
+//		bow = new Bow();
+//		arrow = new Arrow();
 		
->>>>>>> c5027763b27ef505f327c61d03b93454131059a2
 //		ObjView drvr2 = new ObjView();
 //		try
 //		{
@@ -142,34 +142,54 @@ public class ShootTarget extends Application
 	}
 	
 	// Launch arrow
-//		void fire()
-//		{
-//			if (arrow.getTranslateX() == 150 && arrow.getTranslateY() == -25)
-//			{
-////				ball = new Bubble(8, Color.BLUE);
-//				Point3D loc = arrow.localToScene(0, 0, 60);
-//				arrow.setTranslateX(loc.getX());
-//				arrow.setTranslateY(loc.getY());
-//				arrow.setTranslateZ(loc.getZ());
-//				Transform rot = arrow.getTransforms().get(0);
-//				Point3D vel = rot.deltaTransform(0, 0, 4);
-//				//System.out.println(vel);
-//				Arrow.vZ = vel.getZ();
-//				arrow.setVisible(true);
-//				root.getChildren().add(arrow);
-//			}
-//		}
+		void fire()
+		{
+			if (arrow.getTranslateX() == 150 && arrow.getTranslateY() == -25)
+			{
+				arrow = new Arrow();
+				//System.out.println(vel);
+				Arrow.vZ = vel.getZ();
+				arrow.setVisible(true);
+				root.getChildren().add(arrow);
+			}
+		}
 		
 		public void update()
 		{
 			bow.update();
-			arrow.update();
-<<<<<<< HEAD
 			target1.update();
 			target2.update();
-=======
->>>>>>> c5027763b27ef505f327c61d03b93454131059a2
+			if (arrow != null) 
+			{
+				arrow.update();
+				if (target1.isTouching(arrow)) // if the arrow hits the first target
+				{
+					root.getChildren().remove(arrow);
+					arrow = null;
+				}
+				else if (target2.isTouching(arrow)) // if the arrow hits the second target
+				{
+					root.getChildren().remove(arrow);
+					arrow = null;
+				}
+				else if (outside(arrow)) // if the arrow misses and goes past the target
+				{
+					root.getChildren().remove(arrow);
+					arrow = null;
+				}
+			}
+
 		}
+		
+		private boolean outside(Arrow b) 
+		{
+	        // Check if b is outside BOUND
+			double x = b.getTranslateX();
+			double y = b.getTranslateY();
+			double z = b.getTranslateZ();
+
+	        return (x*x + y*y + z*z > BOUND * BOUND);
+	    }
 
 	@Override
 	public void start(Stage primaryStage) 
@@ -264,11 +284,8 @@ public class ShootTarget extends Application
 				KeyFrame kf = new KeyFrame(Duration.millis(1000 / FPS),
 						e -> {
 							// update position
-<<<<<<< HEAD
+
 							update();
-=======
-							update(sceneRoot);
->>>>>>> c5027763b27ef505f327c61d03b93454131059a2
 						}
 					);
 				Timeline mainLoop = new Timeline(kf);
