@@ -2,6 +2,12 @@ import java.io.IOException;
 import javafx.scene.Group;
 import javafx.scene.transform.Rotate;
 
+/**
+ * Class for Bow
+ * 
+ * @author Patrick Hara, Tharun Parackal
+ */
+
 public class Bow extends Group
 {	
 	Rotate rotateBow = new Rotate(90, Rotate.Y_AXIS);
@@ -23,12 +29,9 @@ public class Bow extends Group
 		bow.setScaleX(50);
 		bow.setScaleY(-50);
 		bow.setScaleZ(-50);
-//		bow.setTranslateX(110);
-//		bow.setTranslateY(-150);
 		bow.setTranslateX(0);
 		bow.setTranslateY(0);
 		bow.setTranslateZ(0);
-//		Rotate rotateBow = new Rotate(90, Rotate.Y_AXIS);
 		bow.getTransforms().addAll(rotateBow);
 		this.getChildren().addAll(bow);
 	}

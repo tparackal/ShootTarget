@@ -4,14 +4,25 @@ import javafx.scene.shape.Cylinder;
 import java.io.IOException;
 import javafx.scene.Group;
 import javafx.scene.transform.Rotate;
-public class Target extends Cylinder {
+
+/**
+ * Class for Target
+ * 
+ * @author Patrick Hara, Tharun Parackal
+ */
+
+public class Target extends Cylinder 
+{
 	public double vX = 10;
 	public double vY = 10;
+	public double r;
 	int direction;
 	int dirCount = 25;
 	Rotate rotateTarget = new Rotate(90, Rotate.X_AXIS);
-	public Target(double radius, double height, Color fill, int direct, int z) {
+	public Target(double radius, double height, Color fill, int direct, int z) 
+	{
 		super(radius, height);
+		r = radius;
 		direction = direct;
 		final PhongMaterial mat = new PhongMaterial();
 		mat.setDiffuseColor(fill);
@@ -22,12 +33,15 @@ public class Target extends Cylinder {
 		setTranslateZ(z); 
 		getTransforms().addAll(rotateTarget);
 	}
-	public void update() {
-		switch(direction) {
+	public void update() 
+	{
+		switch(direction) 
+		{
 			case 1:
 				setTranslateY(getTranslateY() - vY);
 				dirCount++;
-				if(dirCount > 50) {
+				if(dirCount > 50)
+				{
 					dirCount = 0;
 					direction = 2;
 					break;
@@ -36,7 +50,8 @@ public class Target extends Cylinder {
 			case 2:
 				setTranslateY(getTranslateY() + vY);
 				dirCount++;
-				if(dirCount > 50) {
+				if(dirCount > 50) 
+				{
 					dirCount = 0;
 					direction = 1;
 					break;
@@ -45,7 +60,8 @@ public class Target extends Cylinder {
 			case 3:
 				setTranslateX(getTranslateX() - vX);
 				dirCount++;
-				if(dirCount > 50) {
+				if(dirCount > 50) 
+				{
 					dirCount = 0;
 					direction = 4;
 					break;
@@ -54,16 +70,32 @@ public class Target extends Cylinder {
 			case 4:
 				setTranslateX(getTranslateX() + vX);
 				dirCount++;
-				if(dirCount > 50) {
+				if(dirCount > 50) 
+				{
 					dirCount = 0;
 					direction = 3;
 					break;
 				}
 				break;
 		}
-//		setTranslateY(getTranslateY() - vY);
 		
 	}
 	
+	public boolean isTouching(Arrow arrow) // collision detection
+	{
+		if(getTranslateZ() == (arrow.getTranslateZ() + 100)) // check if arrow and target have the same Z coordinate
+		{
+			double dist = distance(arrow.getTranslateX(), arrow.getTranslateY(), getTranslateX()-150, getTranslateY()+25);
+			return (dist <= r);
+		}
+		return false;
+			
+	}
 	
+	public static double distance(double x1, double y1, double x2, double y2) // distance formula
+	{
+		double xsquared = Math.pow(x2 - x1, 2);
+		double ysquared = Math.pow(y2 - y1, 2);
+		return Math.sqrt(xsquared + ysquared);
+	}
 }

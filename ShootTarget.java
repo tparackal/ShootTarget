@@ -24,6 +24,16 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.scene.transform.Transform;
 
+/**
+ * Main class
+ * 
+ * Press the Space Bar to shoot an arrow 
+ * Try to hit the two targets
+ * You win when you hit both targets
+ * You lose when you run out of arrows (start with 4 arrows)
+ * 
+ * @author Patrick Hara, Tharun Parackal
+ */
 
 public class ShootTarget extends Application
 {
@@ -33,124 +43,52 @@ public class ShootTarget extends Application
 	private final double sceneWidth = 600;
 	private final double sceneHeight = 600;
 
-	private double mousePosX;
-	private double mousePosY;
-	private double mouseOldX;
-	private double mouseOldY;
-	private double mouseDeltaX;
-	private double mouseDeltaY;
 	
 	final int FPS = 30;
 	public int numArrows = 4; // amount of arrows left
 	Bow bow;
 	Arrow arrow;
 
+	public boolean canReload, target1Hit, target2Hit = false;
+	
 	Target target1;
 	Target target2;
 	
-	final double BOUND = 800;
+	final double BOUND = 2000;
 
 	Group root;
-//	Group arrow;
-//	public static int bowX = 0;
-//	public static int bowY = 0;
 	
 	private void constructWorld(Group root) 
 	{
-		// AmbientLight light = new AmbientLight();
-//		AmbientLight light = new AmbientLight(Color.rgb(100, 100, 100));
-
-//		PointLight pl = new PointLight();
-//		pl.setTranslateX(100);
-//		pl.setTranslateY(-180);
-//		pl.setTranslateZ(-100);
-//		root.getChildren().add(pl);
-		
-//		ObjView drvr = new ObjView();
-//		try
-//		{
-//			drvr.load(ClassLoader.getSystemResource("Bow.obj").toString());
-//		} 
-//		catch (IOException e) 
-//		{
-//			System.out.println("Trouble loading model");
-//			e.printStackTrace();
-//		}
-//		Group bow = drvr.getRoot();
-//		bow.setScaleX(50);
-//		bow.setScaleY(-50);
-//		bow.setScaleZ(-50);
-//		bow.setTranslateX(0);
-//		bow.setTranslateY(0);
-//		bow.setTranslateZ(0);
-//		Rotate rotateBow = new Rotate(90, Rotate.Y_AXIS);
-//		bow.getTransforms().addAll(rotateBow);
-		
-//		root.getChildren().add(bow);
-//		for (Node n:bow.getChildren())
-//		{
-//			MeshView mv = (MeshView) n;
-//			Mesh m = ((MeshView) n).getMesh();
-//			//mv.setDrawMode(DrawMode.LINE);
-//			System.out.println(n);
-//			System.out.println(m);
-//			TriangleMesh tm = (TriangleMesh) m;
-//			System.out.println("Faces: "+tm.getFaceElementSize());
-//			System.out.println(tm.getFaces() );
-//			System.out.println(tm.getFaceSmoothingGroups());
-//			System.out.println("Normals: "+tm.getNormalElementSize());
-//			System.out.println(tm.getNormals());
-//			System.out.println("Points: "+tm.getPointElementSize());
-//			System.out.println(tm.getPoints());
-//			System.out.println("TexCoords: "+tm.getTexCoordElementSize());
-//			System.out.println(tm.getTexCoords());
-//		}
-
-		
 		bow = new Bow();
 		arrow = new Arrow();
 		target1 = new Target(50, 5, Color.BLUE, 1, 300);
-		target2 = new Target(50, 5, Color.GREEN, 3, 350);
-
-		
-//		bow = new Bow();
-//		arrow = new Arrow();
-		
-//		ObjView drvr2 = new ObjView();
-//		try
-//		{
-//			drvr2.load(ClassLoader.getSystemResource("Arrow.obj").toString());
-//		} 
-//		catch (IOException e) 
-//		{
-//			System.out.println("Trouble loading model");
-//			e.printStackTrace();
-//		}
-//		arrow = drvr2.getRoot();
-//		arrow.setScaleX(30);
-//		arrow.setScaleY(-30);
-//		arrow.setScaleZ(30);
-//		arrow.setTranslateX(150);
-//		arrow.setTranslateY(-25);
-//		arrow.setTranslateZ(0);
-//		
-//		
-//		Rotate rotateArrow = new Rotate(90, Rotate.X_AXIS);
-//		arrow.getTransforms().addAll(rotateArrow);
-//		root.getChildren().add(arrow);
+		target2 = new Target(50, 5, Color.GREEN, 3, 680);
 		root.getChildren().addAll(bow, arrow, target1, target2);
 	}
 	
 	// Launch arrow
 		void fire()
 		{
-			if (arrow.getTranslateX() == 150 && arrow.getTranslateY() == -25)
+			arrow.vZ = 20;
+			numArrows--;
+			System.out.println("ARROWS LEFT: " + numArrows);
+		}
+		
+		void win()
+		{
+			if(target1Hit && target2Hit)
 			{
-				arrow = new Arrow();
-				//System.out.println(vel);
-				Arrow.vZ = vel.getZ();
-				arrow.setVisible(true);
-				root.getChildren().add(arrow);
+				System.out.println("YOU WIN!!!!");
+				System.out.println("ARROWS LEFT: " + numArrows);
+			}
+		}
+		
+		void lose()
+		{
+			if((numArrows <= 0) && (!target1Hit || !target2Hit))
+			{
+				System.out.println("YOU LOSE!!!!");
 			}
 		}
 		
@@ -159,26 +97,53 @@ public class ShootTarget extends Application
 			bow.update();
 			target1.update();
 			target2.update();
-			if (arrow != null) 
+			arrow.update();
+			win();
+			if (arrow.getTranslateZ() != 0) 
 			{
-				arrow.update();
 				if (target1.isTouching(arrow)) // if the arrow hits the first target
 				{
-					root.getChildren().remove(arrow);
-					arrow = null;
+					target1.setTranslateX(-2000);
+					target1.setTranslateY(2000);
+					target1.vY = 0;
+					target1Hit = true;
+					System.out.println("Target 1 is Hit");
+					canReload = true;
+					reload();
+					
 				}
-				else if (target2.isTouching(arrow)) // if the arrow hits the second target
+				if (target2.isTouching(arrow)) // if the arrow hits the second target
 				{
-					root.getChildren().remove(arrow);
-					arrow = null;
+					target2.setTranslateX(-2000);
+					target2.setTranslateY(2000);
+					target2.vX = 0;
+					target2Hit = true;
+					System.out.println("Target 2 is Hit");
+					canReload = true;
+					reload();
+					
+
 				}
 				else if (outside(arrow)) // if the arrow misses and goes past the target
 				{
-					root.getChildren().remove(arrow);
-					arrow = null;
+					canReload = true;
+					reload();
+					lose();
 				}
 			}
 
+		}
+		
+		public void reload() // prepares another arrow for launch
+		{
+			if(canReload && numArrows > 0)
+			{
+				arrow.vZ = 0;
+				arrow.setTranslateX(0);
+				arrow.setTranslateY(0);
+				arrow.setTranslateZ(0);
+				canReload = false;
+			}
 		}
 		
 		private boolean outside(Arrow b) 
@@ -222,60 +187,10 @@ public class ShootTarget extends Application
 			// What key did the user press?
 			KeyCode keycode = event.getCode();
 
-			Point3D delta = null;
-			if (keycode == KeyCode.COMMA) 
+			if (keycode == KeyCode.SPACE) 
 			{
-				delta = new Point3D(0, 0, change);
+				fire();
 			}
-			if (keycode == KeyCode.PERIOD) 
-			{
-				delta = new Point3D(0, 0, -change);
-			}
-			if (keycode == KeyCode.A) 
-			{
-				delta = new Point3D(-change, 0, 0);
-			}
-			if (keycode == KeyCode.D) 
-			{
-				delta = new Point3D(change, 0, 0);
-			}
-			if (keycode == KeyCode.W) 
-			{
-				delta = new Point3D(0, -change, 0);
-			}
-			if (keycode == KeyCode.S) 
-			{
-				delta = new Point3D(0, change, 0);
-			}
-			if (delta != null) 
-			{
-				Point3D delta2 = camera.localToParent(delta);
-				cameraDolly.setTranslateX(cameraDolly.getTranslateX() + delta2.getX());
-				cameraDolly.setTranslateY(cameraDolly.getTranslateY() + delta2.getY());
-				cameraDolly.setTranslateZ(cameraDolly.getTranslateZ() + delta2.getZ());
-
-			}
-		});
-
-		// Use mouse to control camera rotation
-		scene.setOnMousePressed(me -> 
-		{
-			mousePosX = me.getSceneX();
-			mousePosY = me.getSceneY();
-//			fire();
-		});
-
-		scene.setOnMouseDragged(me -> 
-		{
-			mouseOldX = mousePosX;
-			mouseOldY = mousePosY;
-			mousePosX = me.getSceneX();
-			mousePosY = me.getSceneY();
-			mouseDeltaX = (mousePosX - mouseOldX);
-			mouseDeltaY = (mousePosY - mouseOldY);
-
-			yRotate.setAngle(((yRotate.getAngle() - mouseDeltaX * 0.2) % 360 + 540) % 360 - 180); // +
-			xRotate.setAngle(((xRotate.getAngle() + mouseDeltaY * 0.2) % 360 + 540) % 360 - 180); // -
 		});
 
 		primaryStage.setTitle("Shoot Target");
